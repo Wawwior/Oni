@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.wawwior.oni.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "ClientPlayerEntityMixin",
+    "CommandSuggestorMixin",
+    "KeyboardMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

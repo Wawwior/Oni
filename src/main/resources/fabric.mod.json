@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "oni",
+  "version": "${version}",
+  "name": "Oni",
+  "description": "Fucking Demon Hacks",
+  "authors": [
+    "Wawwior"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/oni/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "me.wawwior.oni.Oni"
+    ]
+  },
+  "mixins": [
+    "oni.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.8",
+    "fabric": "*",
+    "minecraft": "1.18"
+  }
+}
