@@ -4,6 +4,7 @@
   "package": "me.wawwior.oni.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "ChatScreenMixin",
     "ClientPlayerEntityMixin",
     "CommandSuggestorMixin",
     "KeyboardMixin"

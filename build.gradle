@@ -17,9 +17,11 @@ repositories {
 dependencies {
     implementation 'org.junit.jupiter:junit-jupiter:5.8.2'
 
-    implementation 'me.wawwior:Utils:1.0'
+    //Local maven install of https://github.com/Wawwior/Utils
+    implementation 'me.wawwior:Utils:1.2'
 
-    implementation 'me.wawwior:Config:1.0-SNAPSHOT'
+    //Local maven install of https://github.com/Wawwior/Config
+    implementation 'me.wawwior:Config:1.1'
 
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"

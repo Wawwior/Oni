@@ -1,32 +1,17 @@
-/*
- * Copyright (c) 2022-2022 Wawwior
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 package me.wawwior.oni.systems.module.modules;
 
+import me.wawwior.oni.Oni;
+import me.wawwior.oni.events.ShutdownEvent;
+import me.wawwior.oni.render.gui.ClickGui;
 import me.wawwior.oni.systems.module.Module;
 import me.wawwior.oni.systems.module.ModuleConfig;
+import me.wawwior.utils.event.IEventListener;
+import me.wawwior.utils.event.Subscribe;
 import org.lwjgl.glfw.GLFW;
 
-public class ClickGuiModule extends Module<ClickGuiModule.ClickGuiConfig> {
+public class ClickGuiModule extends Module<ClickGuiModule.ClickGuiConfig> implements IEventListener {
+
+    boolean hudHidden = false;
 
     public static class ClickGuiConfig extends ModuleConfig {
 
@@ -36,4 +21,22 @@ public class ClickGuiModule extends Module<ClickGuiModule.ClickGuiConfig> {
         super("clickgui", GLFW.GLFW_KEY_RIGHT_SHIFT, ClickGuiConfig.class);
     }
 
+    @Override
+    protected void onEnable() {
+        hudHidden = Oni.MC.options.hudHidden;
+        Oni.MC.options.hudHidden = true;
+        Oni.MC.setScreen(ClickGui.getInstance());
+    }
+
+    @Override
+    protected void onDisable() {
+        Oni.MC.options.hudHidden = hudHidden;
+        Oni.MC.setScreen(null);
+    }
+
+    @Subscribe
+    public void onShutdown(ShutdownEvent e) {
+        Oni.MC.options.hudHidden = hudHidden;
+        config.toggled = false;
+    }
 }

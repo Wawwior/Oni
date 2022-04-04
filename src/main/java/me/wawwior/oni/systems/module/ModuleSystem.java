@@ -1,33 +1,14 @@
-/*
- * Copyright (c) 2021-2022 Wawwior
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 package me.wawwior.oni.systems.module;
 
 import me.wawwior.config.IConfig;
+import me.wawwior.oni.Oni;
 import me.wawwior.oni.events.KeyEvent;
 import me.wawwior.oni.systems.System;
+import me.wawwior.oni.systems.module.modules.ClickGuiModule;
 import me.wawwior.oni.systems.module.modules.RandomModule;
 import me.wawwior.utils.event.IEventListener;
 import me.wawwior.utils.event.Subscribe;
+import net.minecraft.client.gui.screen.ChatScreen;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -50,14 +31,21 @@ public class ModuleSystem extends System<ModuleSystem.ModulesConfig> implements 
         init();
     }
 
-    public void init() {
+    private void init() {
         register(new RandomModule());
+        register(new ClickGuiModule());
     }
 
     public void register(Module<? extends ModuleConfig> module) {
-        if (modules.stream().anyMatch(m -> m.name.equalsIgnoreCase(module.name))) return;
+        if (modules.stream().anyMatch(m -> m.getName().equalsIgnoreCase(module.getName()))) return;
+
         modules.add(module);
         moduleInstances.put(module.getClass(), module);
+
+        if (module instanceof IEventListener) {
+            Oni.EVENT_BUS.register((IEventListener) module);
+            Oni.INSTANCE.getLogger().info("Registered Module \"" + module.getName() + "\" to EVENT_BUS");
+        }
     }
 
     @Override
@@ -72,11 +60,16 @@ public class ModuleSystem extends System<ModuleSystem.ModulesConfig> implements 
 
     @Subscribe
     public void toggle(KeyEvent event) {
+        if (Oni.MC.currentScreen instanceof ChatScreen) return;
         if (event.getAction() == GLFW.GLFW_PRESS) {
             modules.forEach(m -> {
-                if (m.config.key == event.getKey()) m.toggle();
+                if (m.getKey() == event.getKey()) m.toggle();
             });
         }
+    }
+
+    public static ModuleSystem get() {
+        return Oni.INSTANCE.getSystemManager().getInstance(ModuleSystem.class);
     }
 
     @SuppressWarnings("unchecked")

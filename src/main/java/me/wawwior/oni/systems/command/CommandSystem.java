@@ -1,25 +1,3 @@
-/*
- * Copyright (c) 2021-2022 Wawwior
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 package me.wawwior.oni.systems.command;
 
 import com.mojang.brigadier.CommandDispatcher;
@@ -28,7 +6,6 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.wawwior.config.IConfig;
 import me.wawwior.oni.Oni;
 import me.wawwior.oni.systems.System;
-import me.wawwior.oni.systems.SystemManager;
 import me.wawwior.oni.systems.command.commands.BindCommand;
 import me.wawwior.oni.systems.command.commands.PrefixCommand;
 import me.wawwior.oni.systems.command.commands.SayCommand;
@@ -72,12 +49,13 @@ public class CommandSystem extends System<CommandSystem.CommandsConfig> {
         register(new BindCommand());
     }
 
-    public int onCommand(String command) throws CommandException {
+    public int onCommand(String command) throws CommandSyntaxException {
         ParseResults<CommandSource> parse = dispatcher.parse(command, COMMAND_SOURCE);
         try {
             return dispatcher.execute(parse);
         } catch (CommandSyntaxException e) {
-            throw new CommandException("Unknown command: " + command.split(" ")[0]);
+            if (e instanceof CommandException) throw e;
+            throw new CommandException("Unknown command: \"%s\"!", command.split(" ")[0]);
         }
     }
 
@@ -86,8 +64,7 @@ public class CommandSystem extends System<CommandSystem.CommandsConfig> {
     }
 
     private void register(Command command) {
-        commands.removeIf(command1 -> command1.getName().equals(command.getName()));
-        commandInstances.values().removeIf(command1 -> command1.getName().equals(command.getName()));
+        if (commands.stream().anyMatch(c -> c.getName().equalsIgnoreCase(command.getName()))) return;
 
         command.registerTo(dispatcher);
         commands.add(command);
@@ -119,7 +96,15 @@ public class CommandSystem extends System<CommandSystem.CommandsConfig> {
     }
 
     public static CommandSystem get() {
-        return SystemManager.getInstance(CommandSystem.class);
+        return Oni.INSTANCE.getSystemManager().getInstance(CommandSystem.class);
+    }
+
+    public String getPrefix() {
+        return config.prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        config.prefix = prefix;
     }
 
 }
