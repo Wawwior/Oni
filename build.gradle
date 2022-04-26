@@ -12,6 +12,9 @@ project.ext.lwjglNatives = "natives-windows"
 repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+        url "https://repo.wawwior.me/repository/maven-releases/"
+    }
 }
 
 dependencies {

@@ -11,9 +11,6 @@ import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- * @author Wawwior
- */
 @Environment(EnvType.CLIENT)
 public class Oni implements ClientModInitializer {
 

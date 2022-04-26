@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(ChatScreen.class)
-public class ChatScreenMixin extends Screen {
+public abstract class ChatScreenMixin extends Screen {
 
     @Shadow
     CommandSuggestor commandSuggestor;
@@ -70,7 +70,6 @@ public class ChatScreenMixin extends Screen {
     }
 
     @Shadow
-    public void setChatFromHistory(int offset) {
-    }
+    public abstract void setChatFromHistory(int offset);
 
 }
