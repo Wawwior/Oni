@@ -1,6 +1,8 @@
 package me.wawwior.oni;
 
 import me.wawwior.config.ConfigProvider;
+import me.wawwior.config.io.impl.FileInfo;
+import me.wawwior.config.io.impl.JsonFileAdapter;
 import me.wawwior.oni.events.ShutdownEvent;
 import me.wawwior.oni.systems.SystemManager;
 import me.wawwior.utils.event.EventBus;
@@ -21,7 +23,7 @@ public class Oni implements ClientModInitializer {
 
     public static Oni INSTANCE;
 
-    private final ConfigProvider configProvider = new ConfigProvider("./oni/");
+    private final ConfigProvider<FileInfo> configProvider = new ConfigProvider<>(new JsonFileAdapter("./oni/"), false);
 
     private SystemManager systemManager;
 
@@ -57,7 +59,7 @@ public class Oni implements ClientModInitializer {
         return systemManager;
     }
 
-    public ConfigProvider getConfigProvider() {
+    public ConfigProvider<FileInfo> getConfigProvider() {
         return configProvider;
     }
 

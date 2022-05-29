@@ -1,14 +1,14 @@
 package me.wawwior.oni.systems.module;
 
 import me.wawwior.config.Configurable;
-import me.wawwior.oni.Oni;
+import me.wawwior.config.io.impl.FileInfo;
 
-public class Module<T extends ModuleConfig> extends Configurable<T> {
+public class Module<T extends ModuleConfig> extends Configurable<T, FileInfo> {
 
     private final String name;
 
     public Module(String name, int key, Class<T> configClass) {
-        super(configClass, "modules/", name, Oni.INSTANCE.getConfigProvider());
+        super(configClass, ModuleSystem.get(), name);
         config.key = key;
         this.name = name;
     }

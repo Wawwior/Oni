@@ -1,11 +1,10 @@
 package me.wawwior.oni.render.gui.design.components;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import me.wawwior.oni.render.gui.Element;
 import me.wawwior.oni.render.gui.design.Component;
 import me.wawwior.oni.render.gui.design.Design;
-import me.wawwior.oni.render.gui.Element;
 import net.minecraft.client.render.BufferBuilder;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexFormat.DrawMode;
 import net.minecraft.client.render.VertexFormats;
@@ -53,9 +52,13 @@ public class RectangleComponent implements Component {
 
     @Override
     public void draw(Design.RenderContext context, Element e) {
-        RenderSystem.setShader(GameRenderer::getPositionColorShader);
+        //RenderSystem.setShader(GameRenderer::getPositionColorShader);
+
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder bufferBuilder = tessellator.getBuffer();
+
+        bufferBuilder.clear();
+
         bufferBuilder.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 
         bufferBuilder
@@ -75,6 +78,8 @@ public class RectangleComponent implements Component {
                 .color(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, color.getAlpha() / 255f)
                 .next();
 
-        tessellator.draw();
+        bufferBuilder.end();
+        BufferRenderer.draw(bufferBuilder);
+
     }
 }

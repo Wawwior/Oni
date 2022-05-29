@@ -9,7 +9,6 @@ import me.wawwior.oni.systems.module.modules.ClickGuiModule;
 import me.wawwior.oni.utils.GuiUtils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 public class ClickGui extends Screen {
@@ -31,7 +30,7 @@ public class ClickGui extends Screen {
         element.children.forEach(e -> {
             design.draw(new Design.RenderContext(matrices, mouseX, mouseY, delta), e);
         });
-        renderTooltip(matrices, new LiteralText("Mouse bound tooltip in clickgui"), mouseX, mouseY);
+        //renderTooltip(matrices, new LiteralText("Mouse bound tooltip in clickgui"), mouseX, mouseY);
     }
 
     @Override

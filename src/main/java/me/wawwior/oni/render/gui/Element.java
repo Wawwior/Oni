@@ -1,15 +1,16 @@
 package me.wawwior.oni.render.gui;
 
 import me.wawwior.config.Configurable;
+import me.wawwior.config.io.impl.FileInfo;
 import me.wawwior.oni.Oni;
 import org.jetbrains.annotations.Nullable;
 
-public class Element<T extends ElementConfig, U extends Element> extends Configurable<T> {
+public class Element<T extends ElementConfig, U extends Element> extends Configurable<T, FileInfo> {
 
     U parent;
 
     public Element(String id, Class<T> configClass, int x, int y, int width, int height, @Nullable U parent) {
-        super(configClass, "gui/", id, Oni.INSTANCE.getConfigProvider());
+        super(configClass, FileInfo.of("gui/", id), Oni.INSTANCE.getConfigProvider());
         this.parent = parent;
         config.x = x;
         config.y = y;

@@ -19,7 +19,6 @@ import java.util.Map;
 public class ModuleSystem extends System<ModuleSystem.ModulesConfig> implements IEventListener {
 
     private final ArrayList<Module<? extends ModuleConfig>> modules = new ArrayList<>();
-
     private final Map<Class<? extends Module>, Module<? extends ModuleConfig>> moduleInstances = new HashMap<>();
 
     public static class ModulesConfig implements IConfig {
@@ -27,13 +26,7 @@ public class ModuleSystem extends System<ModuleSystem.ModulesConfig> implements 
     }
 
     public ModuleSystem() {
-        super("module", ModulesConfig.class);
-        init();
-    }
-
-    private void init() {
-        register(new RandomModule());
-        register(new ClickGuiModule());
+        super("modules", ModulesConfig.class);
     }
 
     public void register(Module<? extends ModuleConfig> module) {
@@ -50,12 +43,8 @@ public class ModuleSystem extends System<ModuleSystem.ModulesConfig> implements 
 
     @Override
     public void onLoad() {
-        modules.forEach(Module::load);
-    }
-
-    @Override
-    public void onUnload() {
-        modules.forEach(Module::save);
+        register(new RandomModule());
+        register(new ClickGuiModule());
     }
 
     @Subscribe
